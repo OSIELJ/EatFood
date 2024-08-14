@@ -1,4 +1,4 @@
-package com.example.eatfood
+package com.example.eatfood.activites
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.example.eatfood.R
 import com.example.eatfood.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
