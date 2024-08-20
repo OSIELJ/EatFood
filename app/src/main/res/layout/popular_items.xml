@@ -8,9 +8,10 @@
     app:cardUseCompatPadding="true">
 
 
-    <TextView
-        android:id="@+id/tv_popular_meal_item"
+    <ImageView
+        android:id="@+id/img_popular_meal_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
 
 </androidx.cardview.widget.CardView>
