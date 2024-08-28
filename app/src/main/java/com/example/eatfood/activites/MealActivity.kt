@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -14,8 +15,10 @@ import com.bumptech.glide.Glide
 import com.example.eatfood.R
 import com.example.eatfood.data.Meal
 import com.example.eatfood.databinding.ActivityMealBinding
+import com.example.eatfood.db.MealDatabase
 import com.example.eatfood.fragments.HomeFragment
 import com.example.eatfood.viewModel.MealViewModel
+import com.example.eatfood.viewModel.MealViewModelFactory
 
 class MealActivity : AppCompatActivity() {
     private lateinit var mealId:String
@@ -36,7 +39,10 @@ class MealActivity : AppCompatActivity() {
             insets
         }
 
-        mealMvvm = ViewModelProvider(this)[MealViewModel::class.java]
+        val mealDatabase = MealDatabase.getInstance(this)
+        val viewModelFactory = MealViewModelFactory(mealDatabase)
+
+        mealMvvm = ViewModelProvider(this, viewModelFactory)[MealViewModel::class.java]
 
         getMealInformationFromIntent()
 
@@ -46,6 +52,16 @@ class MealActivity : AppCompatActivity() {
         observerMealDetailsLiveData()
 
         onYoutubeImageClick()
+        onFavoriteClick()
+    }
+
+    private fun onFavoriteClick() {
+        binding.btnAddToFav.setOnClickListener {
+            mealToSave?.let {
+                mealMvvm.insertMeal(it)
+                Toast.makeText(this, "Meal saved", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun onYoutubeImageClick() {
@@ -55,8 +71,12 @@ class MealActivity : AppCompatActivity() {
         }
     }
 
+    private var mealToSave:Meal?=null
+
     private fun observerMealDetailsLiveData() {
         mealMvvm.observeMealDetailsLiveData().observe(this) {meal ->
+            mealToSave = meal
+
             binding.tvCategoryInfo.text = "Category : ${meal.strCategory}"
             binding.tvAreaInfo.text = "Area : ${meal.strArea}"
             binding.tvInstructions.text = meal.strInstructions
