@@ -10,15 +10,19 @@ import com.example.eatfood.data.MealsByCategoryList
 import com.example.eatfood.data.MealsByCategory
 import com.example.eatfood.data.Meal
 import com.example.eatfood.data.MealList
+import com.example.eatfood.db.MealDatabase
 import com.example.eatfood.retrofit.RetrofitInstance
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeViewModel():ViewModel() {
+class HomeViewModel(
+    private val mealDatabase: MealDatabase
+):ViewModel() {
     private var randomMealLiveData = MutableLiveData<Meal>()
     private var popularItemsLiveData = MutableLiveData<List<MealsByCategory>>()
     private var categoriesLiveData = MutableLiveData<List<Category>>()
+    private var favoriteMealsLiveData = mealDatabase.mealDao().getAllMeals()
     fun getRandomMeal(){
 
         RetrofitInstance.api.getRandomMeal().enqueue(object : Callback<MealList> {
@@ -77,6 +81,10 @@ class HomeViewModel():ViewModel() {
     fun observeCategoriesLiveData():LiveData<List<Category>>{
         return categoriesLiveData
 
+    }
+
+    fun observeFavoritesMealsLiveData(): LiveData<List<Meal>>{
+        return favoriteMealsLiveData
     }
 
 }
