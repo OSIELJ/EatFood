@@ -18,6 +18,7 @@ import com.example.eatfood.adapters.MostPopularAdapter
 import com.example.eatfood.data.MealsByCategory
 import com.example.eatfood.data.Meal
 import com.example.eatfood.databinding.FragmentHomeBinding
+import com.example.eatfood.fragments.bottomsheet.MealBottomSheetFragment
 import com.example.eatfood.viewModel.HomeViewModel
 
 
@@ -70,6 +71,15 @@ class HomeFragment : Fragment() {
         observeCategoriesLiveData()
         onCategoryClick()
 
+        onPopularItemLongClick()
+
+    }
+
+    private fun onPopularItemLongClick() {
+        popularItemsAdapter.onLongItemClick = { meal ->
+            val mealBottomSheetFragment = MealBottomSheetFragment.newInstance(meal.idMeal)
+            mealBottomSheetFragment.show(childFragmentManager, "Meal Info")
+        }
     }
 
     private fun onCategoryClick() {
