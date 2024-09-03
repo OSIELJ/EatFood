@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.Query
 import com.example.eatfood.data.Category
 import com.example.eatfood.data.CategoryList
 import com.example.eatfood.data.MealsByCategoryList
@@ -26,6 +27,7 @@ class HomeViewModel(
     private var categoriesLiveData = MutableLiveData<List<Category>>()
     private var favoriteMealsLiveData = mealDatabase.mealDao().getAllMeals()
     private var bottomSheetMealLiveData = MutableLiveData<Meal>()
+    private var searchMealLiveData = MutableLiveData<List<Meal>>()
 
     fun getRandomMeal(){
 
@@ -90,6 +92,24 @@ class HomeViewModel(
         })
 
     }
+
+    fun searchMeal(searchQuery: String) = RetrofitInstance.api.searchMeals(searchQuery).enqueue(
+        object : Callback<MealList>{
+            override fun onResponse(call: Call<MealList>, response: Response<MealList>) {
+                val mealList = response.body()?.meals
+                mealList?.let {
+                    searchMealLiveData.postValue(it)
+                }
+            }
+
+            override fun onFailure(call: Call<MealList>, t: Throwable) {
+                Log.e("HomeViewModel", t.message.toString())
+            }
+
+        }
+    )
+
+    fun observeSearchMealsLiveData(): LiveData<List<Meal>> = searchMealLiveData
 
     fun deleteMeal(meal: Meal){
         viewModelScope.launch {
