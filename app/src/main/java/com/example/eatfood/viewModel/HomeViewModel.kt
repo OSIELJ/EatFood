@@ -29,6 +29,9 @@ class HomeViewModel(
     private var bottomSheetMealLiveData = MutableLiveData<Meal>()
     private var searchMealLiveData = MutableLiveData<List<Meal>>()
 
+    init {
+        getRandomMeal()
+    }
     fun getRandomMeal(){
 
         RetrofitInstance.api.getRandomMeal().enqueue(object : Callback<MealList> {
